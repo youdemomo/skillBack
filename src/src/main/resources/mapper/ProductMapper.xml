@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.seckill_backend.mapper.ProductMapper">
+
+    <!-- 定义结果映射 -->
+    <resultMap id="ProductResultMap" type="com.example.seckill_backend.model.Product">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="stock" column="stock"/>
+        <result property="specifications" column="specifications"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <!-- 获取所有商品，只选择名称和图片URL -->
+    <select id="getAllProducts" resultMap="ProductResultMap">
+        SELECT id, name, image_url,price FROM product
+        WHERE type = 0;
+    </select>
+
+    <!-- 根据商品名称模糊查询 -->
+    <select id="searchProductsByName" resultMap="ProductResultMap">
+        SELECT id, name, image_url FROM product WHERE name LIKE CONCAT('%', #{name}, '%') AND type = 0;
+    </select>
+
+    <!-- 获取商品详情 -->
+    <select id="getProductById" resultMap="ProductResultMap">
+        SELECT id, name, description, price, stock, specifications, image_url FROM product WHERE id = #{id}
+    </select>
+
+    <!-- 插入新商品 -->
+    <insert id="insertProduct" parameterType="com.example.seckill_backend.model.Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO product (name, description, price, stock, specifications, image_url, type)
+        VALUES (#{name}, #{description}, #{price}, #{stock}, #{specifications}, #{imageUrl}, #{type})
+    </insert>
+
+    <!-- 更新商品库存 -->
+    <update id="updateProductStock" parameterType="com.example.seckill_backend.model.Product">
+        UPDATE product
+        SET stock = #{stock}
+        WHERE id = #{id}
+    </update>
+
+<!--更新商品类型为秒杀商品-->
+    <update id="updateProductType" parameterType="com.example.seckill_backend.model.Product">
+        UPDATE product
+        SET type = #{type}
+        WHERE id = #{productId};
+    </update>
+    <!-- 更新 product 表中的 type 字段为 0 -->
+    <update id="updateProductTypeToNormal">
+        UPDATE product
+        SET type = 0
+        WHERE id = #{productId}
+    </update>
+</mapper>

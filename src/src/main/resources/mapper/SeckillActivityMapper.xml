@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.seckill_backend.mapper.SeckillActivityMapper">
+
+    <!-- 插入秒杀活动 -->
+    <insert id="insertSeckillActivity" parameterType="com.example.seckill_backend.model.SeckillActivity">
+        INSERT INTO seckill_activity (title, start_time, end_time, status, created_at, updated_at)
+        VALUES (#{title}, #{startTime}, #{endTime}, #{status}, NOW(), NOW());
+    </insert>
+    <!-- 获取所有秒杀活动 -->
+    <select id="getAllSeckillActivities" resultType="com.example.seckill_backend.model.SeckillActivity">
+        SELECT id, title, start_time AS startTime, end_time AS endTime,status
+        FROM seckill_activity
+    </select>
+</mapper>
